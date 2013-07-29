@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="uft-8"/>
+    <title>MarkdownPad</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="me.css" />
+</head>
+
+<body>
+    
+    <div id="me"></div>
+
+<script type="text/javascript" src="meaudio.js"></script>
+<script type="text/javascript" src="meplayer.js"></script>
+<script type="text/javascript">
+    
+    window.onload = function(){
+        var mep = new Meplayer('me');
+
+        var list = [
+            {
+                name: '我好想你-苏打绿',
+                url: '我好想你-苏打绿.mp3',
+                cover: 'c2.png'
+            }
+        ];
+        mep.setPlayList(list);
+    };
+    
+</script>
+
+</body>
+</html>

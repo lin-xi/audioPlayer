@@ -1,0 +1,177 @@
+@font-face {
+	font-family: 'leeme';
+	src:url('fonts/leeme.eot');
+	src:url('fonts/leeme.eot?#iefix') format('embedded-opentype'),
+		url('fonts/leeme.woff') format('woff'),
+		url('fonts/leeme.ttf') format('truetype'),
+		url('fonts/leeme.svg#leeme') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+	font-family: 'leeme';
+	content: attr(data-icon);
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+/*
+Instead of a list of all class selectors,
+you can use the generic selector below, but it's slower:
+[class*="icon-"] {
+*/
+.icon-copyright, .icon-move, .icon-equalizer, .icon-equalizer2, .icon-fastforward, .icon-rewind, .icon-play, .icon-stop, .icon-pause, .icon-repeat, .icon-shuffle, .icon-record, .icon-next, .icon-previous, .icon-eject, .icon-previous2, .icon-next2, .icon-repeatone, .icon-play2, .icon-list, .icon-uniF008, .icon-uniF00F, .icon-circleright, .icon-circleup, .icon-circledown, .icon-circleleft, .icon-uniF476, .icon-uniF477, .icon-uniF478, .icon-uniF479, .icon-multiply, .icon-thumbnails, .icon-download, .icon-power, .icon-hourglass2, .icon-headphones, .icon-music, .icon-voice, .icon-grid, .icon-eject-2, .icon-volume, .icon-mute, .icon-play-2, .icon-pause-2, .icon-arrows, .icon-arrows-2 {
+	font-family: 'leeme';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+.icon-copyright:before {
+	content: "\a9";
+}
+.icon-move:before {
+	content: "\f322";
+}
+.icon-equalizer:before {
+	content: "\f18e";
+}
+.icon-equalizer2:before {
+	content: "\f18f";
+}
+.icon-fastforward:before {
+	content: "\f182";
+}
+.icon-rewind:before {
+	content: "\f183";
+}
+.icon-play:before {
+	content: "\f184";
+}
+.icon-stop:before {
+	content: "\f185";
+}
+.icon-pause:before {
+	content: "\f186";
+}
+.icon-repeat:before {
+	content: "\f187";
+}
+.icon-shuffle:before {
+	content: "\f188";
+}
+.icon-record:before {
+	content: "\f189";
+}
+.icon-next:before {
+	content: "\f18a";
+}
+.icon-previous:before {
+	content: "\f18b";
+}
+.icon-eject:before {
+	content: "\f199";
+}
+.icon-previous2:before {
+	content: "\f198";
+}
+.icon-next2:before {
+	content: "\f197";
+}
+.icon-repeatone:before {
+	content: "\f196";
+}
+.icon-play2:before {
+	content: "\f17e";
+}
+.icon-list:before {
+	content: "\f113";
+}
+.icon-uniF008:before {
+	content: "\f008";
+}
+.icon-uniF00F:before {
+	content: "\f00f";
+}
+.icon-circleright:before {
+	content: "\f3c9";
+}
+.icon-circleup:before {
+	content: "\f3c8";
+}
+.icon-circledown:before {
+	content: "\f3c7";
+}
+.icon-circleleft:before {
+	content: "\f3c6";
+}
+.icon-uniF476:before {
+	content: "\f476";
+}
+.icon-uniF477:before {
+	content: "\f477";
+}
+.icon-uniF478:before {
+	content: "\f478";
+}
+.icon-uniF479:before {
+	content: "\f479";
+}
+.icon-multiply:before {
+	content: "\d7";
+}
+.icon-thumbnails:before {
+	content: "\f112";
+}
+.icon-download:before {
+	content: "\f11a";
+}
+.icon-power:before {
+	content: "\f11d";
+}
+.icon-hourglass2:before {
+	content: "\f123";
+}
+.icon-headphones:before {
+	content: "\f180";
+}
+.icon-music:before {
+	content: "\f181";
+}
+.icon-voice:before {
+	content: "\f18c";
+}
+.icon-grid:before {
+	content: "\e016";
+}
+.icon-eject-2:before {
+	content: "\e017";
+}
+.icon-volume:before {
+	content: "\e009";
+}
+.icon-mute:before {
+	content: "\e008";
+}
+.icon-play-2:before {
+	content: "\e010";
+}
+.icon-pause-2:before {
+	content: "\e011";
+}
+.icon-arrows:before {
+	content: "\e000";
+}
+.icon-arrows-2:before {
+	content: "\e001";
+}
