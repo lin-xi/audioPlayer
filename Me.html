@@ -2,22 +2,104 @@
 <html>
 <head>
     <meta charset="uft-8"/>
-    <title>MarkdownPad</title>
+    <title>Me player</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="me.css" />
 </head>
 
 <body>
     
-    <div id="me"></div>
 
-<script type="text/javascript" src="meaudio.js"></script>
-<script type="text/javascript" src="meplayer.js"></script>
+	<div id="player">
+		<div id="playlist">
+			<div class="close" data-icon="&#xf478;"></div>
+			<div id="list"></div>
+		</div>
+		<div id="me">
+			<div class="add" data-icon="&#xf476;"></div>
+		</div>
+	</div>
+
+<script src="jquery-1.9.1.js"></script>
 <script type="text/javascript">
     
     window.onload = function(){
-        var mep = new Meplayer('me');
+		
+		function DOM(dom, selector){
+			dom = dom || [];
+			dom.__proto__ = $.fn;
+			dom.selector = selector || '';
+			return dom;
+		}
+		var $ = function(selector){
+			//仅支持 id 和 css选择表达式
+			if(!selector) return;
+			var found, arr;
+			if(selector == selector.window){
+				arr = [window];
+			} else if((typeof(selector) == 'object' && selector.nodeType == selector.DOCUMENT_NODE) || selector == 'body'){
+				arr = [document.body];
+			}else{
+				arr  = /^#([\w-]*)$/.test(selector) ? ((found = document.getElementById(selector.slice(1))) ? [found] : []) 
+													: (/^\.([\w-]+)$/.test(selector) ? document.getElementsByClassName(selector.slice(1)) : []);
+			}
+			return new DOM(arr, selector);
+		};
+		$.fn = {
+			each: function(elements, callback){
+				var i, key;
+				if(Object.prototype.toString.call(elements) == '[object Array]'){
+					for (i = 0; i < elements.length; i++){
+						if (callback.call(elements[i], i, elements[i]) === false){ return elements;}
+					}
+				} else if(typeof(elements) == 'object'){
+					for (key in elements){
+						if (callback.call(elements[key], key, elements[key]) === false){ return elements;}
+					}
+				}
+				return elements
+			},
+			get: function(idx){
+				return idx === undefined ? Array.protptype.slice.call(this) : this[idx >= 0 ? idx : idx + this.length]
+			},
+			css: function(key, value){
+				var me = this;
+				if(key && value != undefined){
+					me.each(me, function(i, item){
+						item.style[key] = value;
+					});
+					return me;
+				}else if(key){
+					if(me.length>0){
+						var ele = me[0];
+						if(ele.currentStyle){
+							ele.currentStyle[key];
+						}else if(window.getComputedStyle){
+							return window.getComputedStyle(ele , null)[key];
+						}
+					}
+				}
+			}
+		};
+		
+		var win = $(window), scr = win.get(0).screen, h = scr.availHeight, w =scr.availWidth;
+		
+		$('#player').css('width', 2*w+'px');
+		$('#playlist').css('width', w+'px');
+		$('#playlist').css('height', h+'px');
+		$('#me').css('width', w+'px');
+		$('#me').css('height', h+'px');
+		$('#player').css('left', -w+'px');
+		
+		var add = $('.add').get(0), close=$('.close').get(0);
+		add.addEventListener('click', function(){
+			$('#player').css('left', '0px');
+		});
+		close.addEventListener('click', function(){
+			$('#player').css('left', -w+'px');
+		});
 
+        var mep = new Meplayer('me');
         var list = [
             {
                 name: '我好想你-苏打绿',
@@ -28,6 +110,262 @@
         mep.setPlayList(list);
     };
     
+
+    var Meaudio = (function(){
+        var _guid = 0;
+        function Meaudio(){
+            this.id = ++_guid;
+            this.loop = 1;
+            this._init();
+
+            this._callback = {};
+        }
+
+        Meaudio.prototype = {
+            constructor: Meaudio,
+
+            _init: function(){
+                var self = this, doc = document, body = doc.body, id = self.id;
+                var wrap = doc.createElement('div'),
+                    audio_temple = '<audio id="me-audio{#id}" preload loop></audio>';
+
+                body.appendChild(wrap);
+                wrap.innerHTML = audio_temple.replace(/\{#id\}/g, id);
+                var mep = this.mep = doc.getElementById('me-audio'+id);
+
+                var events = {
+                    'loadstart': function(){},
+                    'progress': function(e){
+                        console.log('progress', e);
+                    },
+                    'suspend': function(){}, 
+                    'abort': function(){}, 
+                    'error': function(){}, 
+                    'emptied': function(){}, 
+                    'stalled': function(){}, 
+                    'loadedmetadata': function(e){
+                       console.log('loadedmetadata', e);
+                    }, 
+                    'loadeddata': function(e){
+                        console.log('loadeddata', e);
+                    }, 
+                    'canplay': function(e){
+                        console.log('canplay', e);
+                    }, 
+                    'canplaythrough': function(){}, 
+                    'playing': function(e){
+                        console.log('playing', e);
+                        var fn = self._callback;
+                        if(fn && fn.play){ fn.play(e); }
+                    }, 
+                    'waiting': function(){}, 
+                    'seeking': function(){}, 
+                    'seeked': function(){}, 
+                    'ended': function(){}, 
+                    'durationchange': function(e){
+                    }, 
+                    'timeupdate': function(e){
+                        //console.log('timeupdate', e);
+                    }, 
+                    'play': function(e){
+                        console.log('play', e);
+                    }, 
+                    'pause': function(e){
+                        console.log('pause', e);
+                    }, 
+                    'ratechange': function(){}, 
+                    'volumechange': function(){}
+                };
+
+                for(var key in events){
+                    mep.addEventListener(key, events[key]);
+                }
+            },
+
+            play: function(url, func){
+                if(!url || url == '') return
+                var self = this, mep = self.mep, fn = self._callback;
+                func && (fn.play = func)
+                mep.src = url;
+                mep.play();
+            },
+
+            resume: function(){
+                var self = this, mep = self.mep;
+                mep.play();
+            },
+
+            pause: function(){
+                var self = this, mep = self.mep;
+                mep.pause();
+            },
+
+            prev: function(){
+
+            },
+
+            next: function(){
+
+            },
+
+            setVolume: function(){
+
+            },
+
+            onStateEvent: function(fn){
+                this._callback = fn;
+            },
+
+            /*
+             * 1: playing
+             * 2: paused
+             * 3: ended
+             * 4: stoped
+             */
+            getState: function(){
+                var self = this, mep = self.mep;
+                if(mep.paused){
+                    if(mep.ended){
+                        return 3;
+                    }else if(mep.currentTime > 0){
+                        return 2;
+                    }else{
+                        return 4;
+                    }
+                }else{
+                    return 1;
+                }
+            }
+        };
+
+        return Meaudio;
+    })();
+
+
+    var Meplayer = (function(undefined){
+        var _guid = 0;
+        function Meplayer(node){
+            this.id = ++_guid;
+            this.audio = new Meaudio();
+            this.node = document.getElementById(node);
+
+            this.playlist = [];
+            this.current = -1;
+            this.controls = {};
+
+            this._init();
+        }
+
+        Meplayer.prototype = {
+            constructor: Meplayer,
+
+            _init: function(){
+                var self = this, doc = document, node = self.node, id = self.id;
+                var wrap = doc.createElement('div'),
+                    ui_temple = '<div id="cover{#id}" class="album-cover"></div><div class="audio-control"><div class="button-wrap"><div for="playerControl" class="control-btn"><div id="control{#id}" class="play-btn icon-play-2"><div></div><span id="processBar{#id}"></span></div></div>';
+                wrap.id = self.id;
+				wrap.className = "me-audio";
+				node.appendChild(wrap);
+                wrap.innerHTML = ui_temple.replace(/\{#id\}/g, id);
+
+                var cover = doc.getElementById('cover'+id),
+                    control = doc.getElementById('control'+id),
+                    process = doc.getElementById('processBar'+id);
+
+                var controls = self.controls;
+                controls.cover = cover;
+                controls.control = control;
+                controls.process = process;
+
+                control.addEventListener('click', function(){
+                    self._control();
+                });
+
+                 this.current = 0;
+            },
+            _control: function(){
+                var self = this, audio = self.audio;
+                var state = audio.getState();
+                switch(state){
+                    case 4:
+                        self._play();
+                    break;
+                    case 3:
+                        self._play();
+                    break;
+                    case 2:
+                        self._resume();
+                    break;
+                    case 1:
+                        self._pause();
+                    break;
+                }
+            },
+            _play: function(){
+                var self = this, audio = self.audio, controls = self.controls;
+                var track = self.playlist[self.current];
+                if(track){
+                    audio.play(track.url, function(){
+                        self.addClass(controls.cover, 'play');
+                        self.removeClass(controls.control, 'icon-play-2');
+                        self.addClass(controls.control, 'icon-pause-2');
+                    });
+                }
+            },
+            _pause: function(){
+                var self = this, audio = self.audio, controls = self.controls;
+                audio.pause();
+
+                self.removeClass(controls.cover, 'resume');
+                self.addClass(controls.cover, 'pause');
+                self.removeClass(controls.control, 'icon-pause-2');
+                self.addClass(controls.control, 'icon-play-2');
+            },
+            _resume: function(){
+                var self = this, audio = self.audio, controls = self.controls;
+                audio.resume();
+                self.removeClass(controls.cover, 'pause');
+                self.addClass(controls.cover, 'resume');
+            },
+
+            setPlayList: function(list){
+                if(Object.prototype.toString.call(list) == '[object Array]'){
+                    this.playlist = list;
+                }
+            },
+
+            play: function(index){
+                var self = this, list = self.playlist;
+                if(index && index < list.length){
+                    self.current = index;
+                    self.__play();
+                }else{
+                    self.__play();
+                }
+            },
+
+            addClass: function(ele, cname){
+                var self = this;
+                var cn = ele.className;
+                if(cn.indexOf(cname) == -1){
+                    var regex = new RegExp(cname, 'g');
+                    ele.className = self.trim(cn) + ' ' + cname;
+                }
+            },
+            removeClass: function(ele, cname){
+                var self = this;
+                var cn = ele.className;
+                var regex = new RegExp(cname, 'g');
+                ele.className = self.trim(cn.replace(regex, ''));
+            },
+            trim: function(str){
+                return str.replace(/^\s+$/g, '');
+            }
+        };
+        return Meplayer;
+    })();
+
+       
 </script>
 
 </body>

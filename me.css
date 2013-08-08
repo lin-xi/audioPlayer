@@ -1,31 +1,41 @@
-html, body {
+html, body { padding:0; margin:0;
 background: -moz-radial-gradient(center top, circle, #e6e6e6, #d6dae3, #bcc2cd);
 background: -webkit-radial-gradient(center top, circle, #e6e6e6, #d6dae3, #bcc2cd);
-width: 100%;
-height: 100%; }
+width: 100%; height: 100%; overflow: hidden;}
+
+#player{position: absolute; height:100%; overflow: hidden; transition:all 2s ease;}
+#playlist{float: left; position: relative; height:100%;}
+#me{float: left; position: relative; height:100%;}
+.add{font-size:64px; position: absolute; top: 50%; margin-top:-32px; left: 30px; color:#444; cursor: pointer;}
+.close{font-size:64px; position: absolute; top: 50%; margin-top:-32px; right: 30px; color:#444; cursor: pointer;}
+#list{position: absolute; left: 10%; top:10%; border-radius:20px; width:80%; height:80%; margin-top:-10px; border:5px #888 solid;}
 
 .me-audio{
-	margin: 10px auto;
-	position: relative;
-	width: 360px;
-	height: 360px;
-	padding-left:120px;
-	padding-top:120px;
+	position: absolute;
+	width: 480px;
+	height: 480px;
+	top:50%;
+	left:50%;
+	margin-top:-240px;
+	margin-left:-240px;
 }
 
 .album-cover{
 	position: absolute;
-	left:0;
-	top:0;
+	left:50%;
+	top:50%;
+	margin-top: -240px;
+	margin-left:-240px;
 	width: 480px;
-	height: 360px;
-	padding-top: 120px;
+	height: 480px;
 	border-radius: 100%;
 	box-shadow: 0 2px 2px rgba(255, 255, 255, 0.5), inset 0 2px 12px rgba(0, 0, 0, 0.2);
 	background:url(c1.png);
 }
 
 .button-wrap {
+	margin-top:120px;
+	margin-left:120px;
 	width: 240px;
 	height: 240px;
 	position: relative;
